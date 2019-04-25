@@ -34,8 +34,10 @@ resource "aws_iam_role_policy" "codepipeline_policy" {
         "s3:GetBucketVersioning"
       ],
       "Resource": [
-        "${aws_s3_bucket.codepipeline_bucket.arn}",
-        "${aws_s3_bucket.codepipeline_bucket.arn}/*"
+        "${aws_s3_bucket.artifacts_bucket.arn}",
+        "${aws_s3_bucket.artifacts_bucket.arn}/*",
+        "${aws_s3_bucket.website_bucket.arn}",
+        "${aws_s3_bucket.website_bucket.arn}/*"
       ]
     },
     {

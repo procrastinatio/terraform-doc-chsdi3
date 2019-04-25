@@ -19,12 +19,12 @@ variable "project" {
 	default = "terraform-doc-chsdi3"
 }
 
-variable "bucket" {
-	default = "terraform-doc-chsdi3"
+variable "website-bucket" {
+	default = "terraform-doc-chsdi3-website"
 }
 
-variable "artifact-bucket" {
-	default = "terraform-doc-chsdi3"
+variable "artifacts-bucket" {
+	default = "terraform-doc-chsdi3-artifacts"
 }
 
 variable "repository" {

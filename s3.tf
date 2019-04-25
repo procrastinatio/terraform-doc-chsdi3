@@ -1,6 +1,8 @@
 
-resource "aws_s3_bucket" "codepipeline_bucket" {
-  bucket = "${var.bucket}"
+// Website bucket
+
+resource "aws_s3_bucket" "website_bucket" {
+  bucket = "${var.website-bucket}"
   acl    = "public-read"
   force_destroy = false
   website {
@@ -10,8 +12,8 @@ resource "aws_s3_bucket" "codepipeline_bucket" {
 }
 
 
-resource "aws_s3_bucket_policy" "releases" {
-  bucket = "${aws_s3_bucket.codepipeline_bucket.id}"
+resource "aws_s3_bucket_policy" "releases-policy" {
+  bucket = "${aws_s3_bucket.website_bucket.id}"
   policy =<<POLICY
 {
   "Id": "Policy1513880777555",
@@ -22,8 +24,8 @@ resource "aws_s3_bucket_policy" "releases" {
       "Action": "s3:*",
       "Effect": "Allow",
       "Resource": [
-            "${aws_s3_bucket.codepipeline_bucket.arn}",
-            "${aws_s3_bucket.codepipeline_bucket.arn}/*"
+            "${aws_s3_bucket.website_bucket.arn}",
+            "${aws_s3_bucket.website_bucket.arn}/*"
        ],
 "Principal": {
 "AWS": [
@@ -42,3 +44,38 @@ POLICY
 
 }
 
+// Artifact bucket
+
+resource "aws_s3_bucket" "artifacts_bucket" {
+  bucket = "${var.artifacts-bucket}"
+  acl    = "private"
+  force_destroy = false
+}
+
+
+resource "aws_s3_bucket_policy" "website-policy" {
+  bucket = "${aws_s3_bucket.artifacts_bucket.id}"
+  policy =<<POLICY
+{
+  "Id": "Policy1513880777556",
+  "Version": "2012-10-17",
+"Statement": [
+{
+      "Sid": "Stmt1513880773846",
+      "Action": "s3:*",
+      "Effect": "Allow",
+      "Resource": [
+            "${aws_s3_bucket.artifacts_bucket.arn}",
+            "${aws_s3_bucket.artifacts_bucket.arn}/*"
+       ],
+"Principal": {
+"AWS": [
+          "${aws_iam_role.codepipeline_role.arn}"
+]
+}
+}
+]
+}
+POLICY
+
+}
